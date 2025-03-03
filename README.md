@@ -1,5 +1,13 @@
 # Multiomic_graph
 
+Group Members: 
+Arth Banka
+Siddharth Sabata
+Shivank Sadasivan
+Rachael Oluwakamiye abolade
+Lars Ericson
+Rorry Brenner
+
 Multiomics Pathway and Graph Intersection Analysis
 This repository provides tools and workflows for generating pathway intersection diagrams and graph-based analyses for multiomics data, particularly focusing on protein quantitative trait loci (pQTLs) and their integration into the human pangenome graph. The project leverages state-of-the-art tools like Giraffe, PanPA, and AWS for scalable and reproducible analysis.
 
