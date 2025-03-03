@@ -5,7 +5,7 @@ Arth Banka
 Siddharth Sabata
 Shivank Sadasivan
 Rachael Oluwakamiye abolade
-Lars Ericson
+Lars W. Ericson
 Rorry Brenner
 
 Multiomics Pathway and Graph Intersection Analysis
