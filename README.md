@@ -28,7 +28,6 @@ Visualize pathway intersections and multiomics relationships using custom graph 
 
 
 Methods:
-Methods
 1. Target Protein pQTL Data Processing
 The workflow begins with the processing of protein quantitative trait loci (pQTL) data for the target protein. This dataset consists of chromosome-specific variant files, one for each of the 23 chromosomes. These files are used to identify genetic variants associated with the target protein. The variants are extracted and organized by chromosome to facilitate downstream filtering and analysis. This step ensures that all relevant genetic information for the target protein is included in the pipeline.
 
