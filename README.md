@@ -26,6 +26,9 @@ Integrate proteomics data with graph-based genomic analysis.
 Visualize pathway intersections and multiomics relationships using custom graph generation workflows.
 
 
+![image](https://github.com/user-attachments/assets/57abe32d-d989-4ee3-8416-dcd52997ebba)
+
+
 
 Methods:
 1. Target Protein pQTL Data Processing
