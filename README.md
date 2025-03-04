@@ -6,7 +6,6 @@ Siddharth Sabata
 Shivank Sadasivan
 Rachael Oluwakamiye abolade
 Lars W. Ericson
-Rorry Brenner
 
 Multiomics Pathway and Graph Intersection Analysis
 This repository provides tools and workflows for generating pathway intersection diagrams and graph-based analyses for multiomics data, particularly focusing on protein quantitative trait loci (pQTLs) and their integration into the human pangenome graph. 
@@ -50,4 +49,8 @@ The final step involves combining all gene graphs associated with the target pro
 
 7. Parallelization
 To optimize performance, especially when processing large datasets or multiple chromosomes simultaneously, parallelization is explored within this workflow. Computationally intensive steps such as filtering variants or constructing gene graphs can be parallelized across multiple processors or distributed computing environments. This ensures scalability and efficiency when handling high-throughput sequencing data.
+
+
+![image](https://github.com/user-attachments/assets/3a81935f-a8e2-434f-8589-bae07b105f82)
+
 
