@@ -6,19 +6,19 @@ This script builds PyTorch Geometric graph representations of genes with their v
 Each graph represents a gene's reference sequence as a backbone with variant nodes.
 
 Usage:
-    python graph.py --csv variants.csv --email your.email@example.com
+    python graph.py --tsv variants.tsv --email your.email@example.com
 
-Required CSV format:
-    The input CSV must contain the following columns:
-    - GENEID: Ensembl gene ID (e.g., ENSG00000092847.14)
+Required TSV format:
+    The input TSV must contain the following columns:
+    - Gene_ID: Ensembl gene ID (e.g., ENSG00000092847.14)
     - ALLELE0: Reference allele sequence
     - ALLELE1: Alternate allele sequence
-    - POSITION: Genomic position (chromosome coordinate)
+    - End_pqtl: Genomic position (chromosome coordinate)
     - BETA: Effect size
     - LOG10P: -log10(p-value)
     
     Optional columns:
-    - direction: Strand direction ("+" or "-"), defaults to "+"
+    - Strand: Strand direction ("+" or "-"), defaults to "+"
 
 Outputs:
     - A text file with the list of gene IDs in order (saved in outputs directory)
@@ -262,12 +262,12 @@ def df_to_variants(df):
     variant_dicts = []
     for _, row in df.iterrows():
         variant = {
-            "position": row["POSITION"],
+            "position": row["End_pqtl"],
             "ref": row["ALLELE0"],
             "alt": row["ALLELE1"],
             "beta": row["BETA"],
             "log10_p": row["LOG10P"],
-            "direction": row.get("direction", "+"),
+            "direction": row.get("Strand", "+"),
         }
         variant_dicts.append(variant)
     return variant_dicts
@@ -278,7 +278,7 @@ def df_to_variants(df):
 
 def build_genome_graphs_for_all_genes(df, output_textfile="genes_order.txt", email="youremail@example.com"):
     """
-    1. Group the DataFrame by GENEID (which is an Ensembl ID).
+    1. Group the DataFrame by Gene_ID (which is an Ensembl ID).
     2. For each gene:
        - Fetch the reference sequence from Ensembl/NCBI (fasta).
        - Parse the variants for that gene (df_to_variants).
@@ -291,8 +291,8 @@ def build_genome_graphs_for_all_genes(df, output_textfile="genes_order.txt", ema
     graph_list = []
     gene_list = []  # keep track of gene IDs in order
     
-    # Group by 'GENEID'
-    grouped = df.groupby("GENEID")
+    # Group by 'Gene_ID'
+    grouped = df.groupby("Gene_ID")
     total_genes = len(grouped)
     
     print(f"Processing {total_genes} genes...")
@@ -317,12 +317,12 @@ def build_genome_graphs_for_all_genes(df, output_textfile="genes_order.txt", ema
         variants = []
         for _, row in sub_df.iterrows():
             variant = {
-                "position": row["POSITION"],  # global coordinate
+                "position": row["End_pqtl"],  # global coordinate
                 "ref": row["ALLELE0"],
                 "alt": row["ALLELE1"],
                 "beta": row["BETA"],
                 "log10_p": row["LOG10P"],
-                "direction": row.get("direction", "+"),
+                "direction": row.get("Strand", "+"),
             }
             variants.append(variant)
             
@@ -370,14 +370,14 @@ def save_genome_graphs(graphs, output_file):
 if __name__ == "__main__":
     # Set up command-line argument parsing
     parser = argparse.ArgumentParser(
-        description="Build genome graphs from a CSV file of variant data",
+        description="Build genome graphs from a TSV file of variant data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     
     parser.add_argument(
-        "--csv", "-c", 
+        "--tsv", "-t", 
         required=True,
-        help="Path to the CSV file containing variant data"
+        help="Path to the TSV file containing variant data"
     )
     
     parser.add_argument(
@@ -413,9 +413,9 @@ if __name__ == "__main__":
     # Parse arguments
     args = parser.parse_args()
     
-    # Validate CSV file exists
-    if not os.path.isfile(args.csv):
-        print(f"Error: CSV file '{args.csv}' not found.")
+    # Validate TSV file exists
+    if not os.path.isfile(args.tsv):
+        print(f"Error: TSV file '{args.tsv}' not found.")
         sys.exit(1)
     
     # Create output directory if it doesn't exist
@@ -427,24 +427,24 @@ if __name__ == "__main__":
     gene_list_path = os.path.join(args.output_dir, args.gene_list)
     graphs_output_path = os.path.join(args.output_dir, args.graphs_output)
     
-    # Load CSV into DataFrame
+    # Load TSV into DataFrame
     try:
-        print(f"Loading variant data from {args.csv}...")
-        df = pd.read_csv(args.csv)
+        print(f"Loading variant data from {args.tsv}...")
+        df = pd.read_csv(args.tsv, sep='\t')
         
         # Check required columns
-        required_columns = ["GENEID", "ALLELE0", "ALLELE1", "POSITION", "BETA", "LOG10P"]
+        required_columns = ["Gene_ID", "ALLELE0", "ALLELE1", "End_pqtl", "BETA", "LOG10P"]
         missing_columns = [col for col in required_columns if col not in df.columns]
         
         if missing_columns:
-            print(f"Error: Missing required columns in CSV: {', '.join(missing_columns)}")
+            print(f"Error: Missing required columns in TSV: {', '.join(missing_columns)}")
             print(f"Required columns are: {', '.join(required_columns)}")
             sys.exit(1)
             
-        print(f"Loaded {len(df)} variants across {df['GENEID'].nunique()} genes.")
+        print(f"Loaded {len(df)} variants across {df['Gene_ID'].nunique()} genes.")
         
     except Exception as e:
-        print(f"Error loading CSV file: {e}")
+        print(f"Error loading TSV file: {e}")
         sys.exit(1)
     
     # Run the main function
