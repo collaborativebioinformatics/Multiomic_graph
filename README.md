@@ -7,26 +7,39 @@ Arth Banka,
  Rachael Oluwakamiye abolade,
  Lars W. Ericson
 
-Multiomics Pathway and Graph Intersection Analysis
-This repository provides tools and workflows for generating pathway intersection diagrams and graph-based analyses for multiomics data, particularly focusing on protein quantitative trait loci (pQTLs) and their integration into the human pangenome graph. 
+Population-Specific Multi-omics Graph Generation for a Target Protein
+This repository contains the code and resources for generating population-specific multi-omics gene graphs that integrate genetic variants and protein expression data. The project aims to link genomic variation with protein abundance using graph-based representations, facilitating advanced analytics and precision medicine applications.
 
 Overview
-Goals
-Generate pathway intersection diagrams for multiomics datasets.
+Genetic variants can influence protein expression, leading to population-specific differences in biological processes and disease susceptibility. This project integrates protein quantitative trait loci (pQTL) data with population-specific genetic variants to construct gene-specific graphs. These graphs represent both reference genomic sequences and variant information, enabling downstream analysis through graph-based machine learning models.
 
-Map proteins onto the human pangenome graph using analysis tools.
+Why Graphs?
+Graphs enable advanced graph-based analytics and machine learning applications.
 
-Provide a scalable solution for analyzing pQTLs using cloud resources.
+They facilitate precision medicine by linking genomic variation with protein expression.
+
+Graphs provide a foundation for developing predictive models of variant impacts on protein expression.
 
 Key Features
-Leverage the human pangenome graph to improve genomic mapping accuracy.
+Variant Nodes:
 
-Integrate proteomics data with graph-based genomic analysis.
+Global genomic position
 
-Visualize pathway intersections and multiomics relationships using custom graph generation workflows.
+Reference and alternate allele sequences
 
+Effect size (beta) of the variant
 
-![image](https://github.com/user-attachments/assets/57abe32d-d989-4ee3-8416-dcd52997ebba)
+-log10 of the p-value
+
+Direction of effect
+
+Reference Nodes:
+
+Global genomic position
+
+Local index
+
+Nucleotide sequence
 
 
 
@@ -51,6 +64,7 @@ The final step involves combining all gene graphs associated with the target pro
 
 7. Parallelization
 To optimize performance, especially when processing large datasets or multiple chromosomes simultaneously, parallelization is explored within this workflow. Computationally intensive steps such as filtering variants or constructing gene graphs can be parallelized across multiple processors or distributed computing environments. This ensures scalability and efficiency when handling high-throughput sequencing data.
+
 
 
 ![image](https://github.com/user-attachments/assets/3a81935f-a8e2-434f-8589-bae07b105f82)
