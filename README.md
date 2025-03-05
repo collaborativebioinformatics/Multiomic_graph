@@ -123,8 +123,7 @@ The output includes:
 
 ## Workflow Map Diagram
 
-![image](https://github.com/user-attachments/assets/e95c4c7c-ddd2-4521-82d7-79853467fa48)
-
+![image](https://github.com/user-attachments/assets/cec198fc-7d91-4155-9e46-4f2ed8bd8f9b)
 
 ---
 
