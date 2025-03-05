@@ -1,11 +1,12 @@
 # Multiomic_graph
 
 Group Members: 
+Siddharth Sabata,
+Shivank Sadasivan,
+Lars W. Ericson,
 Arth Banka,
- Siddharth Sabata,
- Shivank Sadasivan,
- Rachael Oluwakamiye abolade,
- Lars W. Ericson
+Rachael Oluwakamiye abolade
+ 
 
 Population-Specific Multi-omics Graph Generation for a Target Protein
 This repository contains the code and resources for generating population-specific multi-omics gene graphs that integrate genetic variants and protein expression data. The project aims to link genomic variation with protein abundance using graph-based representations, facilitating advanced analytics and precision medicine applications.
