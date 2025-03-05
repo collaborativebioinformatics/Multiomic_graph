@@ -70,3 +70,191 @@ To optimize performance, especially when processing large datasets or multiple c
 ![image](https://github.com/user-attachments/assets/3a81935f-a8e2-434f-8589-bae07b105f82)
 
 
+
+
+
+Here’s the updated **GitHub README** based on your workflow, which consists of four scripts. The workflow section, installation, next steps, and results have been revised accordingly.
+
+---
+
+# Population-Specific Multi-omics Graph Generation for a Target Protein
+
+This repository contains the code and resources for generating **population-specific multi-omics gene graphs** that integrate genetic variants and protein expression data. The project links genomic variation with protein abundance using graph-based representations, facilitating advanced analytics and precision medicine applications.
+
+---
+
+## Overview
+
+Genetic variants can influence protein expression, leading to population-specific differences in biological processes and disease susceptibility. This project integrates **protein quantitative trait loci (pQTL)** data with population-specific genetic variants to construct **gene-specific graphs**. These graphs represent both reference genomic sequences and variant information, enabling downstream analysis through graph-based machine learning models.
+
+---
+
+## Workflow
+
+The pipeline consists of **four scripts**, each performing a specific task in the workflow:
+
+### Script 1: pQTL Data Processing
+This script processes multiple pQTL files, concatenates them into a single dataset, extracts genomic positions from variant IDs, and converts the data into BED format for compatibility with downstream tools like BEDTools. The output includes:
+- A combined pQTL dataset (`pqtl_combined.tsv`) with full variant information.
+- A BED file (`pqtl_data.bed`) containing chromosome, start, end positions, and variant IDs for intersection analysis.
+
+### Script 2: GTF File Processing
+This script processes a GTF annotation file to extract gene regions and convert them into BED format. It filters for protein-coding genes and ensures consistency in chromosome naming conventions. The output is a BED file (`gtf_data.bed`) containing gene coordinates for intersection analysis.
+
+### Script 3: Variant-Gene Intersection
+This script uses `bedtools intersect` to compute overlaps between pQTL variants and gene regions. It identifies variants that fall within annotated genes and outputs intersected results in BED format (`intersected_results.bed`).
+
+### Script 4: Final Filtering
+This script merges the intersected results with the full pQTL dataset, extracts gene IDs from the annotation column, and filters variants based on a user-provided list of target genes (`test_gene_list.csv`). The output is a filtered dataset (`final_filtered_pqtl.tsv`) containing only variants associated with target genes.
+
+---
+
+## Installation
+
+### Prerequisites
+
+- Python >= 3.8
+- Required Python libraries: `pandas`, `numpy`, `re`
+- BEDTools (command-line tool)
+
+### Setup Instructions
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-repo-name/genomic-graph-generation.git
+   cd genomic-graph-generation
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install pandas numpy
+   ```
+
+3. Install BEDTools:
+   Follow instructions from [BEDTools documentation](https://bedtools.readthedocs.io/en/latest/content/installation.html).
+
+4. Ensure access to required input files:
+   - pQTL dataset files (`*.gz`)
+   - GTF annotation file (e.g., `gencode.v47.annotation.gtf`)
+   - Target gene list (e.g., `test_gene_list.csv`)
+
+---
+
+## Usage
+
+Run each script sequentially to complete the pipeline:
+
+### Step 1: Process pQTL Files
+```bash
+python script1_pqtl_processing.py
+```
+Input:
+- Path to pQTL files (`*.gz`)
+Output:
+- Combined pQTL dataset (`pqtl_combined.tsv`)
+- BED file for variants (`pqtl_data.bed`)
+
+---
+
+### Step 2: Process GTF File
+```bash
+python script2_gtf_processing.py
+```
+Input:
+- Path to GTF file (e.g., `gencode.v47.annotation.gtf`)
+Output:
+- BED file for gene regions (`gtf_data.bed`)
+
+---
+
+### Step 3: Compute Variant-Gene Intersection
+```bash
+python script3_bedtools_intersect.py
+```
+Input:
+- Variant BED file (`pqtl_data.bed`)
+- Gene BED file (`gtf_data.bed`)
+Output:
+- Intersected results (`intersected_results.bed`)
+
+---
+
+### Step 4: Filter Variants by Target Genes
+```bash
+python script4_final_filtering.py
+```
+Input:
+- Intersected results (`intersected_results.bed`)
+- Combined pQTL dataset (`pqtl_combined.tsv`)
+- Target gene list (`test_gene_list.csv`)
+Output:
+- Final filtered dataset (`final_filtered_pqtl.tsv`)
+
+---
+
+## Results
+
+The pipeline generates the following outputs:
+
+1. **Intermediate Outputs**:
+   - `pqtl_combined.tsv`: Full pQTL dataset.
+   - `pqtl_data.bed`: BED file for variant positions.
+   - `gtf_data.bed`: BED file for gene regions.
+   - `intersected_results.bed`: Variants intersecting gene regions.
+
+2. **Final Output**:
+   - `final_filtered_pqtl.tsv`: Filtered dataset containing only variants associated with target genes.
+
+Example log from Script 4:
+```
+✅ Merged dataset: 3,237 variants (before filtering)
+✅ Final filtered pqtl data saved: 1,245 variants (after filtering)
+✅ Final file saved: final_filtered_pqtl.tsv
+```
+
+---
+
+## Next Steps
+
+1. **Graph Construction**:
+   - Use the filtered pQTL data to construct population-specific gene graphs.
+   - Represent reference sequences and variant nodes using graph-based libraries like [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/).
+
+2. **Machine Learning Integration**:
+   - Train graph neural networks (GNNs) to predict variant impacts on protein expression.
+   - Explore clustering or classification tasks using graph embeddings.
+
+3. **Visualization**:
+   - Develop interactive tools for visualizing gene graphs and exploring variant effects.
+
+4. **Scalability**:
+   - Optimize pipeline performance for large datasets.
+   - Parallelize computationally intensive steps (e.g., intersection analysis).
+
+---
+
+## Contributors
+
+This project was developed as part of a hackathon by:
+
+- Siddharth Sabata  
+- Shivank Sadasivan  
+- Lars Warren Ericson  
+- Rachael Oluwakamiye Abolade  
+- Arth Banka  
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+We thank the organizers of the hackathon for providing a collaborative environment and resources to work on this project.
+
+---
+
+This README now reflects your workflow accurately while maintaining clarity and professionalism. Let me know if you'd like further refinements!
