@@ -71,10 +71,6 @@ To optimize performance, especially when processing large datasets or multiple c
 
 
 
-
-
-Here’s the updated **GitHub README** based on your workflow, which consists of four scripts. The workflow section, installation, next steps, and results have been revised accordingly.
-
 ---
 
 # Population-Specific Multi-omics Graph Generation for a Target Protein
@@ -91,21 +87,63 @@ Genetic variants can influence protein expression, leading to population-specifi
 
 ## Workflow
 
-The pipeline consists of **four scripts**, each performing a specific task in the workflow:
+The pipeline consists of **five scripts**, each performing a specific task in the workflow:
 
-### Script 1: pQTL Data Processing
+### Step 1: pQTL Data Processing (`script1_pqtl_processing.py`)
 This script processes multiple pQTL files, concatenates them into a single dataset, extracts genomic positions from variant IDs, and converts the data into BED format for compatibility with downstream tools like BEDTools. The output includes:
 - A combined pQTL dataset (`pqtl_combined.tsv`) with full variant information.
 - A BED file (`pqtl_data.bed`) containing chromosome, start, end positions, and variant IDs for intersection analysis.
 
-### Script 2: GTF File Processing
+---
+
+### Step 2: GTF File Processing (`script2_gtf_processing.py`)
 This script processes a GTF annotation file to extract gene regions and convert them into BED format. It filters for protein-coding genes and ensures consistency in chromosome naming conventions. The output is a BED file (`gtf_data.bed`) containing gene coordinates for intersection analysis.
 
-### Script 3: Variant-Gene Intersection
+---
+
+### Step 3: Variant-Gene Intersection (`script3_bedtools_intersect.py`)
 This script uses `bedtools intersect` to compute overlaps between pQTL variants and gene regions. It identifies variants that fall within annotated genes and outputs intersected results in BED format (`intersected_results.bed`).
 
-### Script 4: Final Filtering
+---
+
+### Step 4: Final Filtering (`script4_final_filtering.py`)
 This script merges the intersected results with the full pQTL dataset, extracts gene IDs from the annotation column, and filters variants based on a user-provided list of target genes (`test_gene_list.csv`). The output is a filtered dataset (`final_filtered_pqtl.tsv`) containing only variants associated with target genes.
+
+---
+
+### Step 5: Genome Graph Construction (`script5_graph_generation.py`)
+This script constructs **PyTorch Geometric (PyG)** graph representations for each gene using reference sequences and filtered variants. Each graph represents:
+- **Reference Nodes**: Backbone sequence of the gene.
+- **Variant Nodes**: Genetic variations affecting the gene.
+The output includes:
+- A text file listing processed gene IDs (`genes_order.txt`).
+- A compressed PyTorch file containing PyG Data objects (`genome_graphs.pt.gz`).
+
+---
+
+## Workflow Map Diagram
+
+Below is a visual representation of the workflow:
+
+```plaintext
++--------------------+       +--------------------+       +--------------------+
+|   Script 1:        |       |   Script 2:        |       |   Script 3:        |
+| pQTL Processing    |       | GTF Processing     |       | Variant-Gene       |
+| ------------------ |       | ------------------ |       | Intersection       |
+| Input: *.gz files  |       | Input: GTF file    |       | Input: BED files   |
+| Output: BED + TSV  | ----> | Output: BED file   | ----> | Output: Intersect  |
++--------------------+       +--------------------+       +--------------------+
+        ↓                           ↓                           ↓
++--------------------+       +--------------------+       +--------------------+
+|   Script 4:        |       |   Script 5:        |
+| Final Filtering    | ----> | Genome Graphs      |
+| ------------------ |       | ------------------ |
+| Input: Intersect   |       | Input: Filtered    |
+| + Gene List        |       | Variants          |
+| Output: Filtered   | ----> | Output: PyG Graphs |
+| TSV File           |       +--------------------+
++--------------------+
+```
 
 ---
 
@@ -114,7 +152,8 @@ This script merges the intersected results with the full pQTL dataset, extracts 
 ### Prerequisites
 
 - Python >= 3.8
-- Required Python libraries: `pandas`, `numpy`, `re`
+- Required Python libraries:
+  - `pandas`, `numpy`, `re`, `requests`, `biopython`, `torch`, `torch_geometric`
 - BEDTools (command-line tool)
 
 ### Setup Instructions
@@ -127,7 +166,7 @@ This script merges the intersected results with the full pQTL dataset, extracts 
 
 2. Install Python dependencies:
    ```bash
-   pip install pandas numpy
+   pip install pandas numpy requests biopython torch torch-geometric
    ```
 
 3. Install BEDTools:
@@ -192,6 +231,18 @@ Output:
 
 ---
 
+### Step 5: Construct Genome Graphs
+```bash
+python script5_graph_generation.py --tsv final_filtered_pqtl.tsv --email your.email@example.com --output-dir outputs
+```
+Input:
+- Filtered pQTL dataset (`final_filtered_pqtl.tsv`)
+Output:
+- Compressed PyTorch graph objects (`genome_graphs.pt.gz`)
+- Text file listing processed genes (`genes_order.txt`)
+
+---
+
 ## Results
 
 The pipeline generates the following outputs:
@@ -202,46 +253,34 @@ The pipeline generates the following outputs:
    - `gtf_data.bed`: BED file for gene regions.
    - `intersected_results.bed`: Variants intersecting gene regions.
 
-2. **Final Output**:
+2. **Final Outputs**:
    - `final_filtered_pqtl.tsv`: Filtered dataset containing only variants associated with target genes.
+   - `genome_graphs.pt.gz`: Compressed PyTorch Geometric graph objects.
+   - `genes_order.txt`: List of processed Ensembl gene IDs.
 
-Example log from Script 4:
+Example log from Script 5:
 ```
-✅ Merged dataset: 3,237 variants (before filtering)
-✅ Final filtered pqtl data saved: 1,245 variants (after filtering)
-✅ Final file saved: final_filtered_pqtl.tsv
+Successfully built genome graphs for 3 genes.
+Graphs saved to outputs/genome_graphs.pt.gz.
+Gene order saved to outputs/genes_order.txt.
 ```
 
 ---
 
 ## Next Steps
 
-1. **Graph Construction**:
-   - Use the filtered pQTL data to construct population-specific gene graphs.
-   - Represent reference sequences and variant nodes using graph-based libraries like [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/).
+1. **Graph Neural Network (GNN) Integration**:
+   - Train GNN models on constructed genome graphs to predict variant impacts on protein expression.
 
-2. **Machine Learning Integration**:
-   - Train graph neural networks (GNNs) to predict variant impacts on protein expression.
-   - Explore clustering or classification tasks using graph embeddings.
+2. **Visualization**:
+   - Develop interactive tools for exploring genome graphs.
 
-3. **Visualization**:
-   - Develop interactive tools for visualizing gene graphs and exploring variant effects.
-
-4. **Scalability**:
+3. **Scalability**:
    - Optimize pipeline performance for large datasets.
-   - Parallelize computationally intensive steps (e.g., intersection analysis).
 
----
+4. **Biological Insights**:
+   - Analyze population-specific differences in variant impacts on protein abundance.
 
-## Contributors
-
-This project was developed as part of a hackathon by:
-
-- Siddharth Sabata  
-- Shivank Sadasivan  
-- Lars Warren Ericson  
-- Rachael Oluwakamiye Abolade  
-- Arth Banka  
 
 ---
 
@@ -249,12 +288,5 @@ This project was developed as part of a hackathon by:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
----
+Let me know if you'd like further refinements or additional diagrams!
 
-## Acknowledgments
-
-We thank the organizers of the hackathon for providing a collaborative environment and resources to work on this project.
-
----
-
-This README now reflects your workflow accurately while maintaining clarity and professionalism. Let me know if you'd like further refinements!
