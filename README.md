@@ -123,27 +123,8 @@ The output includes:
 
 ## Workflow Map Diagram
 
-Below is a visual representation of the workflow:
+![image](https://github.com/user-attachments/assets/e95c4c7c-ddd2-4521-82d7-79853467fa48)
 
-```plaintext
-+--------------------+       +--------------------+       +--------------------+
-|   Script 1:        |       |   Script 2:        |       |   Script 3:        |
-| pQTL Processing    |       | GTF Processing     |       | Variant-Gene       |
-| ------------------ |       | ------------------ |       | Intersection       |
-| Input: *.gz files  |       | Input: GTF file    |       | Input: BED files   |
-| Output: BED + TSV  | ----> | Output: BED file   | ----> | Output: Intersect  |
-+--------------------+       +--------------------+       +--------------------+
-        ↓                           ↓                           ↓
-+--------------------+       +--------------------+       +--------------------+
-|   Script 4:        |       |   Script 5:        |
-| Final Filtering    | ----> | Genome Graphs      |
-| ------------------ |       | ------------------ |
-| Input: Intersect   |       | Input: Filtered    |
-| + Gene List        |       | Variants          |
-| Output: Filtered   | ----> | Output: PyG Graphs |
-| TSV File           |       +--------------------+
-+--------------------+
-```
 
 ---
 
