@@ -269,5 +269,3 @@ Gene order saved to outputs/genes_order.txt.
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-Let me know if you'd like further refinements or additional diagrams!
-
